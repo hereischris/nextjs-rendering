@@ -1,5 +1,5 @@
 export function generateStaticParams() {
-  return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }]
+  return [{ slug: ['clothing'] }, { slug: ['electronics'] }]
 }
 
 export default function Page({ params }: { params: {  slug: string[] } }) {

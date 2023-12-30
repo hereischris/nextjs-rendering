@@ -1,6 +1,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Links } from "@/components/links"
 
 export default function StaticLayout({
     children,
@@ -21,38 +22,7 @@ export default function StaticLayout({
                   <span className="sr-only">Shopping Cart</span>
                 </Button>
               </div>
-              <nav className="flex-1 overflow-auto py-2">
-                <Link
-                  className="block rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  href="#"
-                >
-                  Home
-                </Link>
-                <Link
-                  className="block rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
-                  href="#"
-                >
-                  Shop All
-                </Link>
-                <Link
-                  className="block rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  href="#"
-                >
-                  Clothing
-                </Link>
-                <Link
-                  className="block rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  href="#"
-                >
-                  Electronics
-                </Link>
-                <Link
-                  className="block rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  href="#"
-                >
-                  Accessories
-                </Link>
-              </nav>
+              <Links />
             </div>
           </div>
           <div className="flex flex-col gap-4 p-6">
