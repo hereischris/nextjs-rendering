@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Links } from "@/components/links"
+import { Suspense } from 'react'
 
 export default function StaticLayout({
     children,
@@ -22,7 +23,9 @@ export default function StaticLayout({
                   <span className="sr-only">Shopping Cart</span>
                 </Button>
               </div>
-              <Links />
+              <Suspense fallback={<p>Loading nav...</p>}>
+                <Links />
+              </Suspense>
             </div>
           </div>
           <div className="flex flex-col gap-4 p-6">

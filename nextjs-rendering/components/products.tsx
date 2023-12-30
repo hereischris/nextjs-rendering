@@ -16,10 +16,11 @@ const mapCategoryToIndex: CategoryIndex = {
   accessories: 'Household Essentials',
 };
 
-async function getProducts(category?: Array<string>) {
+async function getProducts(category?: Array<string>, query?: string) {
   const ff = category && category['0'] ? [[`hierarchicalCategories.lvl0:${mapCategoryToIndex[category['0']]}`]] : [];
+  const q = query && query.length > 2 ? query : '';
   //console.log("Facet filters: ", ff);
-  const results = await index.search('', {
+  const results = await index.search(q, {
     attributesToRetrieve: ['*'],
     hitsPerPage: 30,
     facetFilters: ff,
@@ -29,7 +30,7 @@ async function getProducts(category?: Array<string>) {
 
 export async function Products(props: any) {
   //console.log("Products for category: ", props.category);
-  const hits = await getProducts(props.category);
+  const hits = await getProducts(props.category, props.query);
  // console.log(hits);
     return (
       <div className="flex flex-col gap-4 p-6">
