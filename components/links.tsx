@@ -9,9 +9,12 @@ export function Links() {
   const query = searchParams.get('query');
   const links = [
     {url: '/shop', name: 'All Products'},
-    {url: '/shop/healthfitness', name: 'Health & Fitness (Static)'},
-    {url: '/shop/electronics', name: 'Electronics (Static)'},
-    {url: '/shop/accessories', name: 'Accessories'},
+    {url: '/shop/appliances', name: 'Appliances (Static)'},
+    {url: '/shop/audio', name: 'Audio (Static)'},
+    {url: '/shop/cameras', name: 'Cameras & Acccessories'},
+    {url: '/shop/phones', name: 'Cell Phones'},
+    {url: '/shop/computers', name: 'Computers & Tablets'},
+    {url: '/shop/tv', name: 'TV & Home Theater'},
     ]
  
   return (

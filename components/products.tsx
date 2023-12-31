@@ -14,6 +14,12 @@ const mapCategoryToIndex: CategoryIndex = {
   healthfitness: 'Health, Fitness & Beauty',
   electronics: 'Computers & Tablets',
   accessories: 'Household Essentials',
+  appliances: 'Appliances',
+  audio: 'Audio',
+  cameras: 'Cameras & Camcorders',
+  phones: 'Cell Phones',
+  computers: 'Computers & Tablets',
+  tv: 'TV & Home Theater',
 };
 
 async function getProducts(category?: Array<string>, query?: string) {

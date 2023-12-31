@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Links } from "@/components/links"
 import { Suspense } from 'react'
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StaticLayout({
     children,
@@ -23,7 +24,7 @@ export default function StaticLayout({
                   <span className="sr-only">Shopping Cart</span>
                 </Button>
               </div>
-              <Suspense fallback={<p>Loading nav...</p>}>
+              <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
                 <Links />
               </Suspense>
             </div>
