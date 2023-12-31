@@ -6,7 +6,7 @@ import algoliasearch from 'algoliasearch';
 
 export function generateStaticParams() {
   const params = [
-    { slug: ['appliances'] }, { slug: ['audio'] }
+    { slug: [''] }, { slug: ['appliances'] }, { slug: ['audio'] }
   ]
   return params;
 }
