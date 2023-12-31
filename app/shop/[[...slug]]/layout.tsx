@@ -1,9 +1,9 @@
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Links } from "@/components/links"
-import { Suspense } from 'react'
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Suspense } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
+import { Searchbar } from '@/components/searchbar';
 
 export default function StaticLayout({
     children,
@@ -11,27 +11,29 @@ export default function StaticLayout({
     children: React.ReactNode
   }) {
     return (
-        <div className="grid min-h-screen w-full lg:grid-cols-[240px_1fr]">
-          <div className="hidden lg:block bg-gray-100/40 dark:bg-gray-800/40">
-            <div className="flex flex-col gap-4 p-6">
-              <div className="h-[60px] flex items-center gap-2">
-                <Link className="font-semibold" href="#">
-                  <MountainIcon className="h-6 w-6" />
-                  <span className="">Acme Store</span>
-                </Link>
-                <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-                  <ShoppingCartIcon className="h-4 w-4" />
-                  <span className="sr-only">Shopping Cart</span>
-                </Button>
+        <div className="min-h-screen w-full lg:grid-cols-[240px_1fr]">
+          <div className="grid grid-cols-4">
+            <div className="grid-cols-1  bg-gray-100/40 dark:bg-gray-800/40">
+              <div className="p-6">
+                <div className="h-[60px] flex items-center ">
+                  <Link className="font-semibold" href="#">
+                    <MountainIcon className="h-6 w-6" />
+                    <span className="">Acme Store</span>
+                  </Link>
+                  <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
+                    <ShoppingCartIcon className="h-4 w-4" />
+                    <span className="sr-only">Shopping Cart</span>
+                  </Button>
+                </div>
               </div>
-              <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <Links />
-              </Suspense>
             </div>
+            <div className="col-span-3 gap-4 p-6">
+                <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+                  <Searchbar placeholder='Search'/>
+                </Suspense>
+             </div>
           </div>
-          <div className="flex flex-col gap-4 p-6">
-              {children}
-          </div>
+          {children}
         </div>
       )
   }

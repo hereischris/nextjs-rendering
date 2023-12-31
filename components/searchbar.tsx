@@ -26,9 +26,9 @@ export function Searchbar({ placeholder }: { placeholder: string }) {
     console.log(term);
   }
   return (
-    <div key="1" className="flex w-full max-w-md items-center space-x-2 border rounded-lg p-2 text-black">
+    <div key="1" className="flex w-full items-center space-x-2 w-full border rounded-lg p-2 text-black">
       <SearchIcon className="w-4 h-4" />
-      <Input className="flex-grow"
+      <Input className="flex-grow w-full"
         id="search"
         placeholder={placeholder}
         onChange={(e) => {

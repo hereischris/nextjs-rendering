@@ -3,7 +3,7 @@
 import { usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
  
-export function Links() {
+export function Links(props: any) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const query = searchParams.get('query');
