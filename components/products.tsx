@@ -6,6 +6,14 @@ import Image from 'next/image'
 
 export async function Products(props: any) {
   const hits = props.hits ? props.hits : [];
+    if (hits.length<1) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="text-2xl font-semibold">No products found</h1>
+          <p className="text-gray-600 mt-2">Try another search term</p>
+        </div>
+      );
+    }
     return (
       <div className="gap-4 p-6">
         <div className="grid grid-cols-3 gap-6">
@@ -32,7 +40,7 @@ export async function Products(props: any) {
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-gray-600">{hit.price} €</span>
                     <Button size="sm" variant="outline">
-                      Add to Cart
+                      Add to Cart1
                     </Button>
                   </div>
                 </div>
