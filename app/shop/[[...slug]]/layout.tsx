@@ -27,7 +27,7 @@ export default function StaticLayout({
                 </div>
               </div>
             </div>
-            <div className="col-span-3 gap-4 p-6">
+            <div className="col-span-3 gap-4 p-6 pb-2">
                 <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
                   <Searchbar placeholder='Search'/>
                 </Suspense>

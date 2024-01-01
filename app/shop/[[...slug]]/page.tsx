@@ -2,7 +2,11 @@ import { Suspense } from 'react'
 import Products from '@/components/products';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Links } from "@/components/links"
+import { MultiSelectFilter } from '@/components/multiselectfilter';
 import algoliasearch from 'algoliasearch';
+import { createFetchRequester } from '@algolia/requester-fetch';
+
+export const runtime = 'edge'; 
 
 export function generateStaticParams() {
   const params = [
@@ -11,8 +15,10 @@ export function generateStaticParams() {
   return params;
 }
 
-const client = algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76');
-const index = client.initIndex('instant_search');
+const client = algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76', {
+  requester: createFetchRequester(),
+});
+//const index = client.initIndex('instant_search');
 
 type CategoryIndex = {
   [key: string]: string; // Add index signature
@@ -72,7 +78,7 @@ export default async function Page(
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const results = await getProducts(category, query);
-  //console.log("Results: ", results);
+  //console.log("Results: ", results[0].facets);
     return (
       <div className="grid grid-cols-4 min-h-screen">
         <div className="grid-cols-1 h-full gap-4 p-6 pt-0 bg-gray-100/40 dark:bg-gray-800/40">
@@ -80,8 +86,26 @@ export default async function Page(
             <Links facets={results[0]} catMap={mapCategoryToIndex} speakingMenu={results[1]}/>
           </Suspense>
         </div>
-        <div className="col-span-3 h-full gap-4 p-6 pt-0 ">
-          <h2 className="mt-5">Products: {params.slug} {(query.length > 2)? '+ "'+ query +'"': ''}</h2>
+        <div className="col-span-3 gap-4 p-6 pt-0 ">
+          
+          <div className='grid grid-cols-3 gap-1 p-1 pt-0 '>
+            <div className="grid-cols-1 gap-4 pt-0 ">
+              <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+                <MultiSelectFilter facets={results[0].facets['brands']} name='Brands' />
+              </Suspense>
+            </div>
+            <div className="col-span-1 gap-4  pt-0 " >
+              <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+                <MultiSelectFilter facets={results[0].facets['type']} name ='Type' />
+              </Suspense>
+            </div>
+            <div className="col-span-1 gap-4  pt-0 ">
+              <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+                <MultiSelectFilter facets={results[0].facets['rating']} name ='Rating'  />
+              </Suspense>
+            </div>
+          </div>
+          <h2 className="">Products: {params.slug} {(query.length > 2)? '+ "'+ query +'"': ''}</h2>
           <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
             <Products hits={results[0].hits}/> 
           </Suspense>
