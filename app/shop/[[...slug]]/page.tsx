@@ -91,17 +91,17 @@ export default async function Page(
           <div className='grid grid-cols-3 gap-1 p-1 pt-0 '>
             <div className="grid-cols-1 gap-4 pt-0 ">
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[0].facets['brands']} name='Brands' />
+                <MultiSelectFilter facets={results[0].facets['brand']} name='Brands' facetName='brands' />
               </Suspense>
             </div>
             <div className="col-span-1 gap-4  pt-0 " >
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[0].facets['type']} name ='Type' />
+                <MultiSelectFilter facets={results[0].facets['type']} name ='Type' facetName='type' />
               </Suspense>
             </div>
             <div className="col-span-1 gap-4  pt-0 ">
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[0].facets['rating']} name ='Rating'  />
+                <MultiSelectFilter facets={results[0].facets['rating']} name ='Rating' facetName='rating'  />
               </Suspense>
             </div>
           </div>

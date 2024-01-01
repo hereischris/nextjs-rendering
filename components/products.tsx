@@ -40,7 +40,7 @@ export async function Products(props: any) {
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-gray-600">{hit.price} €</span>
                     <Button size="sm" variant="outline">
-                      Add to Cart1
+                      Add to Cart
                     </Button>
                   </div>
                 </div>
