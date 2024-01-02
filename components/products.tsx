@@ -21,7 +21,7 @@ export async function Products(props: any) {
             hits.map((hit: any) => (
               <div className="card" key={hit.name}>
                 <div className="card-header">
-                  <Image
+                  <img
                     alt="Product image"
                     className="w-full h-auto"
                     height="300"
