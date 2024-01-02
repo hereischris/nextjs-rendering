@@ -72,7 +72,7 @@ async function getProducts(category?: Array<string>, query?: string, searchParam
   ];
 
   if (searchParams) {
-    console.log("Search params: ", searchParams);
+    //console.log("Search params: ", searchParams);
     Object.keys(searchParams).forEach((key) => {
       if (searchParams[key] && key !== 'slug' && key !== 'query') {
         const fvalue: string[] = [];
@@ -116,7 +116,7 @@ export default async function Page(
   const currentPage = Number(searchParams?.page) || 1;
   const {r, facetParams} = await getProducts(category, query, searchParams);
   const results = r.results;
-  console.log("Results: ", results[0].hits);
+  //console.log("Results: ", results[0].hits);
     return (
       <div className="grid grid-cols-4 min-h-screen">
         <div className="grid-cols-1 h-full gap-4 p-6 pt-0 bg-gray-100/40 dark:bg-gray-800/40">

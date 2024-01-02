@@ -25,7 +25,7 @@ export function MultiSelectFilter(props: any) {
         params.append(facetName, facet);
          
         replace(`${pathname}?${params.toString()}`);
-        console.log(facet);
+        //console.log(facet);
     }
     const handleUnselect = (facet:any) => {
         const params = new URLSearchParams(searchParams);
