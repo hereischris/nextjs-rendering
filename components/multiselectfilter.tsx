@@ -13,76 +13,24 @@ import { Command as CommandPrimitive } from "cmdk";
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
-type Framework = Record<"value" | "label", string>;
-type facetValue = Record<"value" | "label", string>;
-
-const FRAMEWORKS = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-  {
-    value: "wordpress",
-    label: "WordPress",
-  },
-  {
-    value: "express.js",
-    label: "Express.js",
-  },
-  {
-    value: "nest.js",
-    label: "Nest.js",
-  }
-] satisfies Framework[]; 
-
 
 export function MultiSelectFilter(props: any) {
-    function encodeMultiValue(value: any): string {
-        if (Array.isArray(value)) {
-            return value.map(encodeURIComponent).join(",");
-        } else {
-            return encodeURIComponent(value);
-        }
-    }
-    function decodeMultiValue(value: any): string[] {
-        if (!value) return [];
-        return value.split(",").filter((v:any)=>Object.hasOwn(facets, decodeURIComponent(v))).map(decodeURIComponent);
-    }
-    function handleSelect(facet: any) {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
 
+    const handleSelect = (facet: any) => {
         const params = new URLSearchParams(searchParams);
-        const current = decodeMultiValue(params.get(facetName))
-        current.push(facet);
-        params.set(facetName, encodeMultiValue(current));
+
+        params.append(facetName, facet);
          
         replace(`${pathname}?${params.toString()}`);
         console.log(facet);
-        //setSelected(prev => [...prev, facet])
     }
     const handleUnselect = (facet:any) => {
         const params = new URLSearchParams(searchParams);
-        let current = decodeMultiValue(params.get(facetName));
-        current = current.filter(s => s !== facet);
-        params.set(facetName, encodeMultiValue(current));
-        if(current.length<1) params.delete(facetName);
+        params.delete(facetName, facet);
         replace(`${pathname}?${params.toString()}`);
-        //setSelected(prev => prev.filter(s => s.value !== framework.value));
     }
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         const input = inputRef.current
@@ -102,23 +50,20 @@ export function MultiSelectFilter(props: any) {
           }
         }
     };
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
-    const { replace } = useRouter();
 
-    const name = props?.name || 'frameworks';
-    const facetName = props?.facetName || 'frameworks';
+
+    const name = props?.name || 'brands';
+    const facetName = props?.facetName || 'brands';
     const facets = props?.facets || {};
     const facetsAsArray = Object.keys(facets);
 
-    const fn = searchParams.get(facetName)?.toString()
-    const selectedFacetValues = decodeMultiValue(fn);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState("");
+    const fn = searchParams.getAll(facetName);
+    const selectedFacetValues = fn.filter((v:any)=>Object.hasOwn(facets, decodeURIComponent(v))).map(decodeURIComponent)
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [open, setOpen] = React.useState(false);
+    const [inputValue, setInputValue] = React.useState("");
 
-
-  const selectables = facetsAsArray.filter((f:any) => !selectedFacetValues.includes(f));
+    const selectables = facetsAsArray.filter((f:any) => !selectedFacetValues.includes(f));
   return (
     <Command onKeyDown={handleKeyDown} className="overflow-visible bg-transparent">
       <div
@@ -128,7 +73,7 @@ export function MultiSelectFilter(props: any) {
           {selectedFacetValues.map((selectedFacet) => {
             return (
               <Badge key={selectedFacet} variant="secondary">
-                {selectedFacet}
+                {selectedFacet} ({facets[selectedFacet]})
                 <button
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
@@ -177,7 +122,7 @@ export function MultiSelectFilter(props: any) {
                     }}
                     className={"cursor-pointer"}
                   >
-                    {f}
+                    {f} ({facets[f]})
                   </CommandItem>
                 );
               })}

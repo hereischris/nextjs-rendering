@@ -9,7 +9,7 @@ export function Links(props: any) {
   const speakingMenu = props?.speakingMenu.facets || {};
   const menuItemsAvailable = speakingMenu['hierarchicalCategories.lvl0'] || {};
   const catMap = props?.catMap;
-  const query = searchParams.get('query');
+  //const query = searchParams.get('query');
   const links = [
     {url: '/shop', name: 'All Products', tag: 'all'},
     {url: '/shop/appliances', name: 'Appliances (Static)', tag: 'appliances'},
@@ -21,7 +21,6 @@ export function Links(props: any) {
     ]
   //console.log("menuitems av", menuItemsAvailable, props);
   return (
-
     <nav className="flex-1 overflow-auto py-2">
       {
           links.map((link: any) => {
@@ -33,7 +32,7 @@ export function Links(props: any) {
             className={`link ${pathname === link.url ? 'bg-gray-100 text-gray-900 dark:text-gray-50 dark:bg-gray-800' : ''} 
                       block rounded-lg px-3 py-2 transition-all hover:text-gray-900 dark:hover:text-gray-50
                       ${!active ? `pointer-events-none text-slate-800` : 'text-gray-500 dark:text-gray-400'}`}
-            href={query ? link.url + '?query=' + query : link.url}
+            href={searchParams ? link.url + `?${searchParams.toString()}` : link.url}
             key={link.url}
 
             >
