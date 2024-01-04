@@ -19,18 +19,42 @@ export function MultiSelectFilter(props: any) {
     const pathname = usePathname();
     const { replace } = useRouter();
 
+    const name = props?.name || 'brands';
+    const facetName = props?.facetName || 'brands';
+    const facets = props?.facets || {};
+    const flps = props?.flps || undefined;
+    const facetsAsArray = Object.keys(facets);
+
+    const fn = searchParams.getAll(facetName);
+    if(flps && pathname.match(new RegExp(`f\.${flps.urlName}`))) fn.push(flps.facetValue);
+    const selectedFacetValues = fn.filter((v:any)=>Object.hasOwn(facets, decodeURIComponent(v))).map(decodeURIComponent);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [open, setOpen] = React.useState(false);
+    const [inputValue, setInputValue] = React.useState("");
+
+    const selectables = facetsAsArray.filter((f:any) => !selectedFacetValues.includes(f));
+
     const handleSelect = (facet: any) => {
         const params = new URLSearchParams(searchParams);
 
-        params.append(facetName, facet);
-         
-        replace(`${pathname}?${params.toString()}`);
+        if(flps && facetName === flps.facet && facet === flps.facetValue ) {
+          const newpath = new RegExp(`f\.${flps.urlName}`).test(pathname) ? pathname : pathname + `/f.${flps.urlName}`;
+          replace(`${newpath}?${params.toString()}`);
+        } else {
+          params.append(facetName, facet);
+          replace(`${pathname}?${params.toString()}`);
+        }
         //console.log(facet);
     }
     const handleUnselect = (facet:any) => {
         const params = new URLSearchParams(searchParams);
         params.delete(facetName, facet);
-        replace(`${pathname}?${params.toString()}`);
+        if(flps && facetName === flps.facet && facet === flps.facetValue && pathname.match(new RegExp(`f\.${flps.urlName}`))) {
+          const newpath = pathname.replace(new RegExp(`f\.${flps.urlName}`), '');
+          replace(`${newpath}?${params.toString()}`);
+        } else {
+          replace(`${pathname}?${params.toString()}`);
+        }
     }
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         const input = inputRef.current
@@ -52,18 +76,6 @@ export function MultiSelectFilter(props: any) {
     };
 
 
-    const name = props?.name || 'brands';
-    const facetName = props?.facetName || 'brands';
-    const facets = props?.facets || {};
-    const facetsAsArray = Object.keys(facets);
-
-    const fn = searchParams.getAll(facetName);
-    const selectedFacetValues = fn.filter((v:any)=>Object.hasOwn(facets, decodeURIComponent(v))).map(decodeURIComponent)
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const [open, setOpen] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState("");
-
-    const selectables = facetsAsArray.filter((f:any) => !selectedFacetValues.includes(f));
   return (
     <Command onKeyDown={handleKeyDown} className="overflow-visible bg-transparent">
       <div

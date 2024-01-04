@@ -30,7 +30,38 @@ type FacetParams = {
     'arrayposition': number;
   }
 };
+type RouterConfig = {
+  [key: string]: {
+    name: string;
+    tag?: string;
+    facet?: string;
+    facetValue?: string;
+  };
+};
+type FLPs = {
+  [key: string]: {
+    urlName: string;
+    facet: string;
+    facetValue: string;
+  };
+};
 
+//This comes from a CMS or other source
+const routerConfig: RouterConfig = {
+  'all': { name: 'All', },
+  'appliances': { name: 'Appliances (Static)', tag: 'Appliances'},
+  'audio': { name: 'Audio (Static)', tag: 'Audio'},
+  'cameras' : { name: 'Cameras & Acccessories', tag: 'Cameras & Camcorders'},
+  'phones' : { name: 'Cell Phones', tag: 'Cell Phones'},
+  //'phones/apple' : { name: 'Cell Phones (Apple)', tag: 'phones', facet: 'brand', facetValue: 'Apple'},
+  'computers' : { name: 'Computers & Tablets', tag: 'Computers & Tablets'},
+  'tv' : { name: 'TV & Home Theater', tag: 'TV & Home Theater'},
+}
+
+const flps: FLPs = {
+  'phones' : { urlName: 'apple', facet: 'brand', facetValue: 'Apple' }
+}
+//This is only needed for the Demo, to create the basefilter
 const mapCategoryToIndex: CategoryIndex = {
   appliances: 'Appliances',
   audio: 'Audio',
@@ -42,11 +73,19 @@ const mapCategoryToIndex: CategoryIndex = {
 
 const baseFilter = Object.keys(mapCategoryToIndex).map((key) => `hierarchicalCategories.lvl0:'${mapCategoryToIndex[key]}'`).join(' OR ');
 
-
-async function getProducts(category?: Array<string>, query?: string, searchParams?: any) {
-  const cat = category && category['0'] ? [`hierarchicalCategories.lvl0:${mapCategoryToIndex[category['0']]}`] : [];
+async function getProducts(category: string, query?: string, searchParams?: any) {
+  const cat = category!=='all'? [`hierarchicalCategories.lvl0:${routerConfig[category].tag}`] : [];
   const ff: any[] = [];
   const facetParams: FacetParams = {};
+  if(flps[category] && searchParams.slug.includes('f.'+flps[category].urlName)) {
+    if(searchParams[flps[category].facet]) {
+      if(typeof searchParams[flps[category].facet] === 'string') {
+        searchParams[flps[category].facet] = [searchParams[flps[category].facet], flps[category].facetValue];
+      }
+    } else {
+      searchParams[flps[category].facet] = flps[category].facetValue;
+    }
+  }
   const q = query && query.length > 3 ? query : '';
   const algoliaQueries = [
     {
@@ -72,7 +111,7 @@ async function getProducts(category?: Array<string>, query?: string, searchParam
   ];
 
   if (searchParams) {
-    //console.log("Search params: ", searchParams);
+    console.log("Search params: ", searchParams);
     Object.keys(searchParams).forEach((key) => {
       if (searchParams[key] && key !== 'slug' && key !== 'query') {
         const fvalue: string[] = [];
@@ -110,8 +149,10 @@ export default async function Page(
       searchParams?: any
     }) 
   {
-  //console.log("Page params: ", params, searchParams);
-  const category = params.slug;
+
+  const category = params.slug ? params.slug.filter((s) => !s.match(/f\./)).join('/') : 'all';
+
+  console.log("Page params: ", params, searchParams, category);
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const {r, facetParams} = await getProducts(category, query, searchParams);
@@ -121,7 +162,7 @@ export default async function Page(
       <div className="grid grid-cols-4 min-h-screen">
         <div className="grid-cols-1 h-full gap-4 p-6 pt-0 bg-gray-100/40 dark:bg-gray-800/40">
           <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-            <Links facets={results[0]} catMap={mapCategoryToIndex} speakingMenu={results[1]}/>
+            <Links facets={results[0]} catMap={routerConfig} speakingMenu={results[1]}/>
           </Suspense>
         </div>
         <div className="col-span-3 gap-4 p-6 pt-0 ">
@@ -129,7 +170,11 @@ export default async function Page(
           <div className='grid grid-cols-3 gap-1 p-1 pt-0 '>
             <div className="grid-cols-1 gap-4 pt-0 ">
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[facetParams['brand']?.arrayposition || 0].facets['brand']} name='Brands' facetName='brand' />
+                <MultiSelectFilter 
+                  facets={results[facetParams['brand']?.arrayposition || 0].facets['brand']}
+                  name='Brands'
+                  facetName='brand'
+                  flps={flps[category]} />
               </Suspense>
             </div>
             <div className="col-span-1 gap-4  pt-0 " >
@@ -143,7 +188,7 @@ export default async function Page(
               </Suspense>
             </div>
           </div>
-          <h2 className="">Products: {params.slug} {(query.length > 3)? '+ "'+ query +'"': ''}</h2>
+          <h2 className="">Products: {routerConfig[category].name} {(query.length > 3)? '+ "'+ query +'"': ''}</h2>
           <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
             <Products hits={results[0].hits}/> 
           </Suspense>

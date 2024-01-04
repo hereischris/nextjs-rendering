@@ -9,7 +9,12 @@ const nextConfig = {
             pathname: '/bestbuy-0118/**',
           },
         ],
-      }
+      },
+      logging: {
+        fetches: {
+          fullUrl: true,
+        },
+      },
 }
 
 module.exports = nextConfig
