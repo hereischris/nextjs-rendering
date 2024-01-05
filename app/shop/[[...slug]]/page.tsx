@@ -11,7 +11,7 @@ export const runtime = 'edge';
 
 export function generateStaticParams() {
   const params = [
-    { slug: [''] }, { slug: ['appliances'] }, { slug: ['audio'] }
+    { slug: [''] }, { slug: ['appliances'] }, { slug: ['audio'] }, { slug: ['computers'] }
   ]
   return params;
 }
