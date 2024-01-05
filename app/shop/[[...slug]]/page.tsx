@@ -5,6 +5,7 @@ import { Links } from "@/components/links"
 import { MultiSelectFilter } from '@/components/multiselectfilter';
 import algoliasearch from 'algoliasearch';
 import { createFetchRequester } from '@algolia/requester-fetch';
+import { ProductsLoading } from '@/components/ui/productsloading';
 
 export const runtime = 'edge'; 
 
@@ -189,7 +190,7 @@ export default async function Page(
             </div>
           </div>
           <h2 className="">Products: {routerConfig[category].name} {(query.length > 3)? '+ "'+ query +'"': ''}</h2>
-          <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
+          <Suspense fallback={<ProductsLoading />} >
             <Products hits={results[0].hits}/> 
           </Suspense>
         </div>
