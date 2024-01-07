@@ -11,6 +11,7 @@ export const runtime = 'edge';
 
 const algoliaAppId = process.env.ALGOLIA_APP_ID || 'missingappid';
 const algoliaApiKey = process.env.ALGOLIA_API_KEY || 'missingkey';
+const algoliaIndex = process.env.ALGOLIA_API_INDEX || 'missingindex';
 
 export function generateStaticParams() {
   const params = [
@@ -53,13 +54,13 @@ type FLPs = {
 //This comes from a CMS or other source
 const routerConfig: RouterConfig = {
   'all': { name: 'All', },
-  'appliances': { name: 'Appliances (Static)', tag: 'Appliances'},
-  'audio': { name: 'Audio (Static)', tag: 'Audio'},
-  'cameras' : { name: 'Cameras & Acccessories', tag: 'Cameras & Camcorders'},
-  'phones' : { name: 'Cell Phones', tag: 'Cell Phones'},
+  'radfahren': { name: 'Radfahren', tag: 'Radfahren'},
+  'laufen': { name: 'Laufen', tag: 'Laufen'},
+  'schwimmen' : { name: 'Schwimmen', tag: 'Schwimmen'},
+  'triathlon' : { name: 'Triathlon', tag: 'Triathlon'},
   //'phones/apple' : { name: 'Cell Phones (Apple)', tag: 'phones', facet: 'brand', facetValue: 'Apple'},
-  'computers' : { name: 'Computers & Tablets', tag: 'Computers & Tablets'},
-  'tv' : { name: 'TV & Home Theater', tag: 'TV & Home Theater'},
+  'fitness' : { name: 'Fitness', tag: 'Fitness'},
+  'outdoor' : { name: 'Outdoor', tag: 'Outdoor'},
 }
 
 const flps: FLPs = {
@@ -75,10 +76,10 @@ const mapCategoryToIndex: CategoryIndex = {
   tv: 'TV & Home Theater',
 };
 
-const baseFilter = Object.keys(mapCategoryToIndex).map((key) => `hierarchicalCategories.lvl0:'${mapCategoryToIndex[key]}'`).join(' OR ');
+const baseFilter = '';//Object.keys(mapCategoryToIndex).map((key) => `hierarchicalCategories.lvl0:'${mapCategoryToIndex[key]}'`).join(' OR ');
 
 async function getProducts(category: string, query?: string, searchParams?: any) {
-  const cat = category!=='all'? [`hierarchicalCategories.lvl0:${routerConfig[category].tag}`] : [];
+  const cat = category!=='all'? [`categoriesMenu.lvl0:${routerConfig[category].tag}`] : [];
   const ff: any[] = [];
   const facetParams: FacetParams = {};
   if(flps[category] && searchParams.slug.includes('f.'+flps[category].urlName)) {
@@ -93,7 +94,7 @@ async function getProducts(category: string, query?: string, searchParams?: any)
   const q = query && query.length > 3 ? query : '';
   const algoliaQueries = [
     {
-      indexName: 'instant_search',
+      indexName: algoliaIndex,
       query: q,
       filters: baseFilter,
       params: {
@@ -103,11 +104,11 @@ async function getProducts(category: string, query?: string, searchParams?: any)
       },
     },
     {
-      indexName: 'instant_search',
+      indexName: algoliaIndex,
       query: q,
       filters: baseFilter,
       params: {
-        facets: ['hierarchicalCategories.lvl0'],
+        facets: ['categoriesMenu.lvl0'],
         hitsPerPage: 0,
         facetFilters: [],
       },
@@ -130,7 +131,7 @@ async function getProducts(category: string, query?: string, searchParams?: any)
   Object.keys(facetParams).forEach((key) => {    
     const adjustedFacetValues = ff.filter((f) => !f.includes(facetParams[key].facetstring[0]))     
     facetParams[key].arrayposition = algoliaQueries.push({ 
-    indexName: 'instant_search', 
+    indexName: algoliaIndex, 
     query: q,
     filters: baseFilter, 
     params: 
@@ -175,20 +176,24 @@ export default async function Page(
             <div className="grid-cols-1 gap-4 pt-0 ">
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
                 <MultiSelectFilter 
-                  facets={results[facetParams['brand']?.arrayposition || 0].facets['brand']}
+                  facets={results[facetParams['manufacturerName']?.arrayposition || 0].facets['manufacturerName']}
                   name='Brands'
-                  facetName='brand'
+                  facetName='manufacturerName'
                   flps={flps[category]} />
               </Suspense>
             </div>
             <div className="col-span-1 gap-4  pt-0 " >
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[facetParams['type']?.arrayposition || 0].facets['type']} name ='Type' facetName='type' />
+                <MultiSelectFilter facets={results[facetParams['attributesWithKeyValue.usageBikeSport']?.arrayposition || 0].facets['attributesWithKeyValue.usageBikeSport']}
+                  name ='Radsport Einsatzbereich'
+                  facetName='attributesWithKeyValue.usageBikeSport' />
               </Suspense>
             </div>
             <div className="col-span-1 gap-4  pt-0 ">
               <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                <MultiSelectFilter facets={results[facetParams['rating']?.arrayposition || 0].facets['rating']} name ='Rating' facetName='rating'  />
+                <MultiSelectFilter facets={results[facetParams['attributesWithKeyValue.color']?.arrayposition || 0].facets['attributesWithKeyValue.color']}
+                  name ='Color'
+                  facetName='attributesWithKeyValue.color'  />
               </Suspense>
             </div>
           </div>

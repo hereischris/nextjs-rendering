@@ -25,7 +25,7 @@ export async function Products(props: any) {
                     alt="Product image"
                     className="w-full h-auto"
                     height="300"
-                    src={hit.image}
+                    src={`https://images.bike24.com/media/${hit.imagePath}`}
                     style={{
                       aspectRatio: "100/100",
                       objectFit: "contain",
@@ -36,7 +36,7 @@ export async function Products(props: any) {
                   <h2 className="text-lg font-semibold">{hit.name}</h2>
                 </div>
                 <div className="card-content">
-                  <p className="text-gray-600 text-xs">{hit.description}</p>
+                  <p className="text-gray-600 text-xs">{hit.shortText}</p>
                   <div className="flex justify-between items-center mt-4">
                     <span className="text-gray-600">{hit.price} €</span>
                     <Button size="sm" variant="outline">

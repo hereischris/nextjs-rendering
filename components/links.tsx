@@ -8,19 +8,19 @@ export function Links(props: any) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const speakingMenu = props?.speakingMenu.facets || {};
-  const menuItemsAvailable = speakingMenu['hierarchicalCategories.lvl0'] || {};
+  const menuItemsAvailable = speakingMenu['categoriesMenu.lvl0'] || {};
   const catMap = props?.catMap;
   const [activeLink, setActiveLink] = useState(pathname);
   //const query = searchParams.get('query');
   //This is a menu config from a CMS
   const links = [
     {url: '/shop', name: 'All Products', tag: ''},
-    {url: '/shop/appliances', name: 'Appliances (Static)', tag: 'appliances'},
-    {url: '/shop/audio', name: 'Audio (Static)', tag: 'audio'},
-    {url: '/shop/cameras', name: 'Cameras & Acccessories', tag: 'cameras'},
-    {url: '/shop/phones', name: 'Cell Phones', tag: 'phones'},
-    {url: '/shop/computers', name: 'Computers & Tablets', tag: 'computers'},
-    {url: '/shop/tv', name: 'TV & Home Theater', tag: 'tv'},
+    {url: '/shop/radfahren', name: 'Radfahren', tag: 'radfahren'},
+    {url: '/shop/laufen', name: 'Laufen', tag: 'laufen'},
+    {url: '/shop/schwimmen', name: 'Schwimmen', tag: 'schwimmen'},
+    {url: '/shop/triathlon', name: 'Triathlon', tag: 'triathlon'},
+    {url: '/shop/fitness', name: 'Fitness', tag: 'fitness'},
+    {url: '/shop/outdoor', name: 'Outdoor', tag: 'outdoor'},
     ]
   //console.log("menuitems av", props.catMap);
   return (
