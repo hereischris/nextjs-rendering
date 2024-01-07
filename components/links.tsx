@@ -27,14 +27,14 @@ export function Links(props: any) {
     <nav className="flex-1 overflow-auto py-2">
       {
           links.map((link: any) => {
-            let active = true;
-            if(link.tag !== 'all' && catMap[link.tag] && !Object.hasOwn(menuItemsAvailable, catMap[link.tag].tag) ) active = false;
+            let enabled = true;
+            if(link.tag !== 'all' && catMap[link.tag] && !Object.hasOwn(menuItemsAvailable, catMap[link.tag].tag) ) enabled = false;
 
             return (
             <Link
             className={`link ${activeLink === link.url ? 'bg-gray-100 text-gray-900 dark:text-gray-50 dark:bg-gray-800' : ''} 
                       block rounded-lg px-3 py-2 transition-all hover:text-gray-900 dark:hover:text-gray-50
-                      ${!active ? `pointer-events-none text-slate-800` : 'text-gray-500 dark:text-gray-400'}`}
+                      ${!enabled ? `pointer-events-none text-slate-800` : 'text-gray-500 dark:text-gray-400'}`}
             href={searchParams ? link.url + `?${searchParams.toString()}` : link.url}
             key={link.url}
             onClick={() => setActiveLink(link.url)}
