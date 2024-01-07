@@ -9,6 +9,9 @@ import { ProductsLoading } from '@/components/ui/productsloading';
 
 export const runtime = 'edge'; 
 
+const algoliaAppId = process.env.ALGOLIA_APP_ID || 'missingappid';
+const algoliaApiKey = process.env.ALGOLIA_API_KEY || 'missingkey';
+
 export function generateStaticParams() {
   const params = [
     { slug: [''] }, { slug: ['appliances'] }, { slug: ['audio'] }, { slug: ['computers'] }
@@ -16,7 +19,7 @@ export function generateStaticParams() {
   return params;
 }
 
-const client = algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76', {
+const client = algoliasearch(algoliaAppId, algoliaApiKey, {
   requester: createFetchRequester(),
 });
 //const index = client.initIndex('instant_search');
